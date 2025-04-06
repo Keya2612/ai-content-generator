@@ -13,17 +13,14 @@ import { AIOutput } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 
-// Modified interface to match Next.js page params format
-interface PageParams {
-  templateSlug: string
+// Next.js will automatically generate the correct type for page params
+type PageParams = {
+  templateSlug: string;
 }
 
-interface PageProps {
-  params: PageParams
-}
-
-function CreateNewContent({ params }: PageProps) {
-  // Use React.use to unwrap the params Promise as required by newer Next.js versions
+// Export the Page component with the correct type signature
+export default function CreateNewContent({ params }: { params: PageParams }) {
+  // Properly unwrap the params using React.use()
   const unwrappedParams = React.use(params);
   const templateSlug = unwrappedParams.templateSlug;
 
@@ -79,5 +76,3 @@ function CreateNewContent({ params }: PageProps) {
     </div>
   )
 }
-
-export default CreateNewContent
