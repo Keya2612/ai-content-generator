@@ -18,7 +18,7 @@ import moment from 'moment'
 interface PROPS{
 
   params:{
-    'template-slug':string
+    'templateSlug':string
   }
 }
 
@@ -26,7 +26,7 @@ function CreateNewContent  (props :PROPS)  {
 
   const params = React.use(props.params);
 
-  const selectedTemplate:TEMPLATE|undefined=Templates?.find((item:TEMPLATE)=>item.slug===params['template-slug'])
+  const selectedTemplate:TEMPLATE|undefined=Templates?.find((item:TEMPLATE)=>item.slug===params['templateSlug'])
 
   const [loading,setLoading] = useState(false);
 
