@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, use } from 'react'
 import FormSection from '../_components/FormSection'
 import OutputSection from '../_components/OutputSection'
 import { TEMPLATE } from '../../_components/TempleteListSection'
@@ -13,16 +13,15 @@ import { AIOutput } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 
-// Next.js will automatically generate the correct type for page params
+// Define the PageParams type correctly
 type PageParams = {
   templateSlug: string;
 }
 
 // Export the Page component with the correct type signature
 export default function CreateNewContent({ params }: { params: PageParams }) {
-  // Properly unwrap the params using React.use()
-  const unwrappedParams = React.use(params);
-  const templateSlug = unwrappedParams.templateSlug;
+  // Unwrap params using React.use()
+  const { templateSlug } = use(params);
 
   const selectedTemplate: TEMPLATE | undefined = Templates?.find(
     (item: TEMPLATE) => item.slug === templateSlug
@@ -52,15 +51,15 @@ export default function CreateNewContent({ params }: { params: PageParams }) {
       templateSlug: slug,
       aiResponse: aiResp,
       createdBy: user?.primaryEmailAddress?.emailAddress,
-      createdAt: moment().format("DD/MM/YYYY "),
+      createdAt: moment().format("DD/MM/YYYY"),
     });
     console.log(result);
   }
   
   return (
     <div className='p-10 '>
-      <Link href={"/dashboard"}>
-        <Button className='bg-blue-700'><ArrowLeft />  Back</Button>
+      <Link href="/dashboard">
+        <Button className='bg-blue-700'><ArrowLeft /> Back</Button>
       </Link>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-5 py-5'>
         {/* FormSection */}
