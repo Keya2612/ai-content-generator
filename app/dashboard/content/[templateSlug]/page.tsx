@@ -13,19 +13,19 @@ import { AIOutput } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 
-// Define the PageParams type correctly
+// Define the PageParams type to match Next.js dynamic route params
 type PageParams = {
   templateSlug: string;
-}
+};
 
 // Export the Page component with the correct type signature
-export default function CreateNewContent({ params }: { params: PageParams }) {
-  // Unwrap params using React.use()
+export default function CreateNewContent({ params }: { params: Promise<PageParams> }) {
+  // Unwrap the params Promise using React.use()
   const { templateSlug } = use(params);
 
   const selectedTemplate: TEMPLATE | undefined = Templates?.find(
     (item: TEMPLATE) => item.slug === templateSlug
-  )
+  );
 
   const [loading, setLoading] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>('');
@@ -43,7 +43,7 @@ export default function CreateNewContent({ params }: { params: PageParams }) {
     setAiOutput(result?.response.text());
     await SaveInDb(FormData, selectedTemplate?.slug, result?.response.text());
     setLoading(false);
-  }
+  };
 
   const SaveInDb = async (FormData: any, slug: any, aiResp: string) => {
     const result = await db.insert(AIOutput).values({
@@ -54,10 +54,10 @@ export default function CreateNewContent({ params }: { params: PageParams }) {
       createdAt: moment().format("DD/MM/YYYY"),
     });
     console.log(result);
-  }
-  
+  };
+
   return (
-    <div className='p-10 '>
+    <div className='p-10'>
       <Link href="/dashboard">
         <Button className='bg-blue-700'><ArrowLeft /> Back</Button>
       </Link>
@@ -66,12 +66,13 @@ export default function CreateNewContent({ params }: { params: PageParams }) {
         <FormSection
           selectedTemplate={selectedTemplate}
           userFormInput={(v: any) => GenerateAIContent(v)}
-          loading={loading} />
+          loading={loading}
+        />
         {/* OutputSection */}
         <div className='col-span-2'>
           <OutputSection aiOutput={aiOutput} />
         </div>
       </div>
     </div>
-  )
+  );
 }
