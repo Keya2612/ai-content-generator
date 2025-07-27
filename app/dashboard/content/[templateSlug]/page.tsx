@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { chatSession } from '@/utils/AiModel'
 import { db } from '@/utils/db'
 import { AIOutput } from '@/utils/schema'
-import { useUser } from '@clerk/nextjs'
+import { useAuth } from '@/lib/auth-context'
 import moment from 'moment'
 
 // Define the PageParams type to match Next.js dynamic route params
@@ -29,9 +29,11 @@ export default function CreateNewContent({ params }: { params: Promise<PageParam
 
   const [loading, setLoading] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>('');
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const GenerateAIContent = async (FormData: any) => {
+    if (!selectedTemplate) return;
+    
     setLoading(true);
     const SelectedPrompt = selectedTemplate?.aiPrompt;
 
@@ -50,11 +52,26 @@ export default function CreateNewContent({ params }: { params: Promise<PageParam
       FormData: FormData,
       templateSlug: slug,
       aiResponse: aiResp,
-      createdBy: user?.primaryEmailAddress?.emailAddress,
+      createdBy: user?.email || '',
       createdAt: moment().format("DD/MM/YYYY"),
     });
     console.log(result);
   };
+
+  // Show error if template not found
+  if (!selectedTemplate) {
+    return (
+      <div className='p-10'>
+        <Link href="/dashboard">
+          <Button className='bg-blue-700'><ArrowLeft /> Back</Button>
+        </Link>
+        <div className='mt-10 text-center'>
+          <h1 className='text-2xl font-bold text-gray-800'>Template Not Found</h1>
+          <p className='text-gray-600 mt-4'>The requested template could not be found.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='p-10'>

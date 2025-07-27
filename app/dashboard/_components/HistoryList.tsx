@@ -1,23 +1,32 @@
 "use client"
 import { db } from '@/utils/db';
 import { AIOutput } from '@/utils/schema';
-import { useUser } from '@clerk/nextjs'
+import { useAuth } from '@/lib/auth-context'
 import { desc, eq } from 'drizzle-orm';
 import React, { useEffect, useState } from 'react'
 import HistoryTable from "@/app/dashboard/_components/HistoryTable";
 
+// Define the type for history items
+type HistoryItem = {
+  id: number;
+  FormData: string;
+  aiResponse: string | null;
+  templateSlug: string;
+  createdBy: string;
+  createdAt: string;
+};
 
 function HistoryList  ()  {
 
-    const {user} = useUser();
-    const [history, setHistory] = useState([]);
+    const {user} = useAuth();
+    const [history, setHistory] = useState<HistoryItem[]>([]);
 
     useEffect(() => {
        user&& GetHistory();
     },[user])
 
     const GetHistory=async()=>{
-        const result = await db.select().from(AIOutput).where(eq(AIOutput.createdBy,user?.primaryEmailAddress?.emailAddress)).orderBy(desc(AIOutput.id));
+        const result = await db.select().from(AIOutput).where(eq(AIOutput.createdBy,user?.email || '')).orderBy(desc(AIOutput.id));
         console.log(result);
         setHistory(result);
     }

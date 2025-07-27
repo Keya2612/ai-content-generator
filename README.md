@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Content Generator
+
+A Next.js application that generates AI-powered content using Google's Gemini AI model with Supabase authentication and Drizzle ORM for database management.
+
+## Features
+
+- 🤖 **AI Content Generation** - Powered by Google Gemini AI
+- 🔐 **Authentication** - Secure user authentication with Supabase
+- 📝 **Template System** - Multiple content templates for different use cases
+- 📊 **History Tracking** - View and manage your generated content history
+- 🎨 **Modern UI** - Beautiful interface with Tailwind CSS and Framer Motion
+- 📱 **Responsive Design** - Works on desktop and mobile devices
+- 🔒 **Protected Routes** - Secure dashboard with middleware protection
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Authentication**: Supabase Auth
+- **Database**: PostgreSQL with Drizzle ORM
+- **AI Model**: Google Gemini AI
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **UI Components**: Radix UI
+- **Typography**: Outfit font family
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- A Supabase account
+- A Google AI API key (for Gemini)
+- A PostgreSQL database (Neon recommended)
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd ai-content-generator
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set up environment variables**
+Copy `.env.example` to `.env.local` and fill in your credentials:
+```env
+# Database
+NEXT_PUBLIC_DRIZZLE_DB_URL=your_neon_database_url_here
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-## Learn More
+# AI Model (Google Gemini)
+NEXT_PUBLIC_GEMINI_API_KEY=your_google_gemini_api_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Set up Supabase**
+   - Create a new Supabase project
+   - Configure authentication settings
+   - Run the database setup SQL (see Migration Guide)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Push database schema**
+```bash
+npm run db:push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. **Run the development server**
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+ai-content-generator/
+├── app/
+│   ├── (auth)/              # Authentication pages
+│   │   ├── sign-in/
+│   │   └── sign-up/
+│   ├── dashboard/           # Protected dashboard routes
+│   │   ├── content/         # Content generation pages
+│   │   └── _components/     # Dashboard components
+│   ├── (data)/             # Static data and templates
+│   └── layout.tsx          # Root layout with AuthProvider
+├── components/
+│   └── ui/                 # Reusable UI components
+├── lib/                    # Library configurations
+│   ├── auth-context.tsx    # Authentication context
+│   ├── supabase.ts         # Supabase client config
+│   ├── supabase-server.ts  # Server-side Supabase
+│   └── supabase-browser.ts # Browser-side Supabase
+├── utils/                  # Utility functions
+│   ├── db.tsx             # Database connection
+│   ├── schema.tsx         # Database schema
+│   └── AiModel.tsx        # AI model configuration
+└── middleware.ts          # Route protection middleware
+```
+
+## Authentication
+
+This application uses Supabase for authentication with the following features:
+
+- Email/password authentication
+- Email confirmation for new users
+- Protected routes with middleware
+- Automatic session management
+- Custom sign-in/sign-up forms
+
+### Migration from Clerk
+
+If you're migrating from Clerk authentication, see the `MIGRATION_README.md` file for detailed instructions.
+
+## Database Schema
+
+The application uses two main tables:
+
+- **users**: Stores user profile information
+- **aiOutput**: Stores generated AI content with user associations
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run db:push` - Push database schema changes
+- `npm run db:studio` - Open Drizzle Studio
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support, please create an issue in the repository or contact the development team.
