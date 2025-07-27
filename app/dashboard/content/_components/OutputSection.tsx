@@ -10,17 +10,31 @@ interface props{
 
 function OutputSection  ({aiOutput}:props)  {
 
-    const editorRef:any= useRef();
+    const editorRef:any= useRef(null);
 
     useEffect(()=>{
-     const editorInstance = editorRef.current.getInstance();
-     editorInstance.setMarkdown(aiOutput);
+     if (editorRef.current) {
+       const editorInstance = editorRef.current.getInstance();
+       editorInstance.setMarkdown(aiOutput);
+     }
     },[aiOutput])
+
+    const handleCopy = () => {
+      if (editorRef.current) {
+        const editorInstance = editorRef.current.getInstance();
+        const markdown = editorInstance.getMarkdown();
+        navigator.clipboard.writeText(markdown);
+        alert('Content copied to clipboard!');
+      }
+    }
+
   return (
     <div className='bg-white shadow-lg border rounded-lg'>
         <div className='flex justify-between items-center p-5 '>
             <h2 className='font-medium text-lg'>Your Result</h2>
-            <Button className='bg-blue-700 flex gap-2'><Copy className='w-4 h-4' />Copy</Button>
+            <Button className='bg-blue-700 flex gap-2' onClick={handleCopy}>
+              <Copy className='w-4 h-4' />Copy
+            </Button>
         </div>
         <Editor
           ref={editorRef}
@@ -28,8 +42,7 @@ function OutputSection  ({aiOutput}:props)  {
           initialEditType="wysiwyg"
           height="600px"
           useCommandShortcut={true}
-          onChange={()=>console.log(editorRef.current.getInstance().getMarkdown())}
-  />
+        />
     </div>
   )
 }

@@ -11,7 +11,7 @@ export default function LandingPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
     
